@@ -12,6 +12,7 @@ use frontend\modules\cytology\models\LibResult;
 use frontend\modules\cytology\models\LibAdequacySpecimen;
 use frontend\modules\cytology\models\LibCytist;
 use yii\helpers\ArrayHelper;
+use kartik\depdrop\DepDrop;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\modules\cytology\models\CytoIn */
@@ -24,9 +25,15 @@ $lib_result = ArrayHelper::map(LibResult::find()->all(), 'code', 'result');
 $lib_adequacy = ArrayHelper::map(LibAdequacy::find()->all(), 'code', 'name');
 $lib_adequacy_specimen = ArrayHelper::map(LibAdequacySpecimen::find()->all(), 'code', 'name');
 $lib_cytist = ArrayHelper::map(LibCytist::find()->all(), 'code', 'name');
+
+// $out = ArrayHelper::map($out, 'vn', 'vn');
 // echo $today = date("Y-m-d");
 // echo $thaiyear = substr((integer)substr(date("Y-m-d"),0,4)+543,2,2);
 // echo $month = substr(date("Y-m-d"),5,2);
+// echo '<pre>';
+// var_dump($out,2,2);
+// echo '</pre>';
+
 ?>
 
 <div class="cyto-in-form">
@@ -34,6 +41,8 @@ $lib_cytist = ArrayHelper::map(LibCytist::find()->all(), 'code', 'name');
   <?php
 
 $this->registerJs("
+
+
   function patientInfo() {
       var hn = $('#cytoin-hn').val();
       $.ajax({
@@ -49,14 +58,17 @@ $this->registerJs("
             $('#cytoin-vn').val(data.vn);
             $('#cytoin-an').val(data.an);
             $('#cytoin-age').val(data.age);
+            $('#cytoin-pttype_name').val(data.pttype_name);
             $('#cytoin-pttype').val(data.pttype);
             $('#cytoin-clinic_ward').val(data.office);
+            $('#cytoin-clinic').val(data.clinic);
+            $('#cytoin-ward').val(data.ward);
         }
       });
     }
 
   function patientInfoByVn(){
-    var vn = $('#cytoin-vn').val();
+    var vn = $('#depdrop_vn').val();
     $.ajax({
         url: '" . Url::toRoute("cyto-in/patientinfobyvn") . "',
         dataType: 'json',
@@ -70,11 +82,34 @@ $this->registerJs("
           $('#cytoin-hn').val(data.hn);
           $('#cytoin-an').val(data.an);
           $('#cytoin-age').val(data.age);
+          $('#cytoin-pttype_name').val(data.pttype_name);
           $('#cytoin-pttype').val(data.pttype);
           $('#cytoin-clinic_ward').val(data.office);
+          $('#cytoin-clinic').val(data.clinic);
+          $('#cytoin-ward').val(data.ward);
         }
     });
   }
+
+  function CytoPrice() {
+      var code = $('#cytoin-cyto_type').val();
+      $.ajax({
+        url: '" . Url::toRoute("cyto-in/cytoprice") . "',
+        dataType: 'json',
+        method: 'GET',
+        data: {'code': code},
+        success: function (data) {
+        console.log(data.code);
+            $('#cytoin-price').val(data.price);
+        }
+      });
+    }
+
+    CytoPrice();
+
+    $('#cytoin-cyto_type').on('change', function(e) {
+        CytoPrice();
+    });
 
   function searchSpecimen(){
     $('#search_specimen').val($('#search_specimen').val().toUpperCase());
@@ -134,12 +169,12 @@ $this->registerJs("
     $('#search_cytist2').val($('#cytoin-cytist2').val());
   }
 
-    $('#cytoin-hn').on('change', function(e) {
-        patientInfo();
-    });
-    $('#cytoin-vn').on('change', function(e) {
-        patientInfoByVn();
-    });
+    // $('#cytoin-hn').on('change', function(e) {
+    //     patientInfo();
+    // });
+    // $('#cytoin-vn').on('change', function(e) {
+    //     patientInfoByVn();
+    // });
 
     $('#search_specimen').on('keyup', function(e) {
         searchSpecimen();
@@ -197,13 +232,26 @@ $this->registerJs("
         syncCytist2();
     });
 
+
+    $('#depdrop_vn').on('change', function(e) {
+      patientInfoByVn();
+      console.log($(this).val());
+
+});
+
 ");
 
 if(!$model->isNewRecord){
   $this->registerJs("
-          //patientInfo();
+
+  $('html, body').animate({
+    scrollTop: $('#result_panel').offset().top
+  }, 1000);
+  $('#search_result1').focus();
+
+        //patientInfo();
           //ใช้ Vn จะตรงกับข้อมูลมากกว่า ในกรณีที่เผื่อคนไข้มี Visit มาใหม่ช่วงแก้ไขข้อมูล
-          patientInfoByVn();
+          // patientInfoByVn();
           syncSpecimen();
           syncCause();
           syncResult1();
@@ -212,6 +260,8 @@ if(!$model->isNewRecord){
           syncResult4();
           syncCytist1();
           syncCytist2();
+          CytoPrice();
+
   ");
 }
 
@@ -241,10 +291,27 @@ if(!$model->isNewRecord){
 </div>
 <div class="row">
   <div class="col-md-3">
-    <?= $form->field($model, 'hn')->textInput(['maxlength' => true,'onclick'=>'test()']) ?>
+
+    <?= $form->field($model, 'hn')->textInput(['maxlength' => true]) ?>
   </div>
+
+
+
   <div class="col-md-3">
-    <?= $form->field($model, 'vn')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'vn')->widget(DepDrop::classname(), [
+       'options' => ['id'=>'depdrop_vn'],
+       'data'=> $out,
+       'pluginOptions'=>[
+          //  'initialize' => true,
+           'depends'=>['cytoin-hn'],
+           'placeholder' => 'เลือก VN',
+           'url' => Url::to(['/cytology/cyto-in/subvn'])
+       ]
+      ]);
+
+
+
+     ?>
   </div>
   <div class="col-md-3">
     <?= $form->field($model, 'an')->textInput(['maxlength' => true,'readonly'=>'readonly']) ?>
@@ -268,8 +335,10 @@ if(!$model->isNewRecord){
     <div class="col-md-2">
       <?= $form->field($model, 'age')->textInput(['maxlength' => true,'readonly'=>'readonly']) ?>
     </div>
+
+
     <div class="col-md-4">
-      <?= $form->field($model, 'pttype')->textInput(['maxlength' => true,'readonly'=>'readonly']) ?>
+      <?= $form->field($model, 'pttype_name')->textInput(['maxlength' => true,'readonly'=>'readonly']) ?>
     </div>
   </div>
 
@@ -281,15 +350,20 @@ if(!$model->isNewRecord){
       <?= $form->field($model, 'address')->textInput(['maxlength' => true,'readonly'=>'readonly']) ?>
   </div>
   <div class="col-md-6">
+
+
       <?= $form->field($model, 'clinic_ward')->textInput(['maxlength' => true,'readonly'=>'readonly']) ?>
     </div>
 </div>
 </div>
 </div>
 </div>
+<?= $form->field($model, 'pttype')->hiddenInput()->label(false) ?>
+<?= $form->field($model, 'clinic')->hiddenInput()->label(false) ?>
+<?= $form->field($model, 'ward')->hiddenInput()->label(false) ?>
+<?= $form->field($model, 'vn')->hiddenInput()->label(false) ?>
 
-
-<div class="panel panel-default">
+<div class="panel panel-default" >
   <div class="panel-heading">
     <h3 class="panel-title">ข้อมูลการส่งตรวจ</h3>
   </div>
@@ -326,8 +400,7 @@ if(!$model->isNewRecord){
 if(!$model->isNewRecord){
 ?>
 
-
-<div class="panel panel-primary">
+<div class="panel panel-primary" id="result_panel" name = "result_panel" >
   <div class="panel-heading">
     <h3 class="panel-title">ผลการตรวจ</h3>
   </div>

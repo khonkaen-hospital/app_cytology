@@ -41,14 +41,12 @@ GridView::widget([
             ['class' => 'yii\grid\SerialColumn'],
             [
               'class' => 'kartik\grid\ExpandRowColumn',
+              'expandOneOnly' =>true,
               'value' => function ($model,$key,$index,$column){
                 return GridView::ROW_COLLAPSED;
               },
               'detail' => function($model,$key,$index,$column){
                 $pt_info = ViewPatientInfo::find()->where(['cn'=>$model->cn])->one();
-
-                // $myall = CytoIn::find()->where(['ref'=>$model->ref])->one();
-
                 return Yii::$app->controller->renderPartial('_detailview',[
                   'model' =>$pt_info
                 ]);
@@ -58,7 +56,7 @@ GridView::widget([
             'cn',
             'hn',
             'fullname',
-            'pttype',
+            'pttype_name',
             // 'cyto_type',
             [
               'label'=>'การตรวจ',
@@ -85,7 +83,17 @@ GridView::widget([
             // 'result_date',
             // 'last_updated',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            // ['class' => 'yii\grid\ActionColumn'],
+            [
+              'class' => 'yii\grid\ActionColumn',
+              'header'=>'ลงผล',
+              'template'=>'{update}',
+              'buttons'=>[
+                'update' => function($url,$model,$key){
+                  return Html::a('<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>',$url);
+                }
+              ]
+            ]
         ],
     ]);
 

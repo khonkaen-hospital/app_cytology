@@ -3,6 +3,7 @@
 namespace frontend\modules\cytology\models;
 
 use Yii;
+use frontend\modules\cytology\models\LibCytoType;
 
 /**
  * This is the model class for table "cyto_in".
@@ -14,15 +15,11 @@ use Yii;
  * @property string $an
  * @property string $fullname
  * @property string $pid
- * @property integer $pttype
- * @property string $pttype_name
+ * @property string $pttype
  * @property integer $age
  * @property string $address
- * @property integer $clinic
- * @property integer $ward
  * @property string $clinic_ward
  * @property string $cn_date
- * @property integer $requester
  * @property integer $cyto_type
  * @property integer $smear_type
  * @property string $specimen
@@ -58,15 +55,14 @@ class CytoIn extends \yii\db\ActiveRecord
     {
         return [
             // [['cn'], 'required'],
-            [['pttype', 'age', 'clinic', 'ward', 'requester', 'cyto_type', 'smear_type', 'adequacy', 'cause', 'price', 'result_level', 'cytist1', 'cytist2'], 'integer'],
+            [['ref','age', 'cyto_type', 'smear_type', 'adequacy', 'cause', 'price', 'result_level', 'cytist1', 'cytist2'], 'integer'],
             [['cn_date', 'result_date', 'last_updated'], 'safe'],
-            [['cn', 'specimen'], 'string', 'max' => 10],
+            [['cn', 'specimen','result1', 'result2', 'result3', 'result4',], 'string', 'max' => 10],
             [['hn', 'vn', 'an'], 'string', 'max' => 8],
             [['fullname'], 'string', 'max' => 200],
             [['pid'], 'string', 'max' => 13],
-            [['pttype_name', 'clinic_ward'], 'string', 'max' => 100],
+            [['pttype', 'clinic_ward'], 'string', 'max' => 100],
             [['address'], 'string', 'max' => 400],
-            [['result1', 'result2', 'result3', 'result4'], 'string', 'max' => 11],
             [['result_detail', 'comment'], 'string', 'max' => 1000],
         ];
     }
@@ -84,16 +80,12 @@ class CytoIn extends \yii\db\ActiveRecord
             'an' => 'An',
             'fullname' => 'ชื่อ-สกุล',
             'pid' => 'เลขประจำตัวบัตรประชาชน',
-            'pttype' => 'Pttype',
-            'pttype_name' => 'สิทธิการรักษา',
-            'age' => 'อายุ',
+            'pttype' => 'สิทธิการรักษา',
+            'age' => 'อายุ(ปี)',
             'address' => 'ที่อยู่',
-            'clinic' => 'Clinic',
-            'ward' => 'Ward',
             'clinic_ward' => 'ห้องตรวจ/หอผู้ป่วย',
             'cn_date' => 'วันที่ลงทะเบียน',
-            'requester' => 'Requester',
-            'cyto_type' => 'ประเภทการตรวจ',
+            'cyto_type' => 'Cyto Type',
             'smear_type' => 'Smear Type',
             'specimen' => 'Specimen',
             'adequacy' => 'Adequacy of Specimen',
@@ -108,7 +100,7 @@ class CytoIn extends \yii\db\ActiveRecord
             'comment' => 'Comment',
             'cytist1' => 'ผู้อ่านผล 1',
             'cytist2' => 'ผู้อ่านผล 2',
-            'result_date' => 'วันที่ลงผลการตรวจ',
+            'result_date' => 'วันที่ลงผล',
             'last_updated' => 'Last Updated',
         ];
     }

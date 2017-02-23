@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $code
  * @property string $name
+ * @property integer $price
  */
 class LibCytoType extends \yii\db\ActiveRecord
 {
@@ -26,6 +27,7 @@ class LibCytoType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['price'], 'integer'],
             [['name'], 'string', 'max' => 100],
         ];
     }
@@ -38,6 +40,7 @@ class LibCytoType extends \yii\db\ActiveRecord
         return [
             'code' => 'Code',
             'name' => 'Name',
+            'price' => 'Price',
         ];
     }
 

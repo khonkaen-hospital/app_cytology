@@ -13,6 +13,7 @@ use frontend\modules\cytology\models\LibSmearType;
 use frontend\modules\cytology\models\LibCytoType;
 use frontend\modules\cytology\models\LibSpecimen;
 use frontend\modules\cytology\models\LibAdequacy;
+use yii\helpers\ArrayHelper;
 /**
  * CytoInController implements the CRUD actions for CytoIn model.
  */
@@ -93,6 +94,7 @@ class CytoInController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'out' =>[],
             ]);
         }
     }
@@ -106,6 +108,9 @@ class CytoInController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $hn = $model->hn;
+
+        $out = ArrayHelper::map($this->getVn($hn),'id','name');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
           return $this->redirect(['index']);
@@ -113,6 +118,7 @@ class CytoInController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'out'=>$out,
             ]);
         }
     }
@@ -157,14 +163,14 @@ a.hn
 ,c.an
 ,c.admite
 ,c.disc
-,b.dep
-,f.clinic
+,b.dep as clinic
+,f.clinic as clinic_name
 ,c.ward
 ,g.ward as ward_name
 ,CONCAT(a.title,a.name," ",a.surname) as fullname
--- ,a.pttype
+,a.pttype
 ,a.age
-,e.text as pttype
+,e.text as pttype_name
 ,a.birth
 ,CONCAT(a.address
 ,(case a.moo when "" then "" else  CONVERT(concat(" หมู่" , a.moo," ") USING utf8) end)
@@ -193,6 +199,9 @@ where a.hn = "'.$hn.'"  and b.vn = (select max(vn) from hospdata.opd_visit where
           $office = '';
           $age = '';
           $pttype = '';
+          $pttype_name = '';
+          $ward = '';
+          $clinic = '';
           foreach ($result as $v){
             $fullname = $v['fullname'];
             $address = $v['address'];
@@ -201,10 +210,13 @@ where a.hn = "'.$hn.'"  and b.vn = (select max(vn) from hospdata.opd_visit where
             $an = $v['an'];
             $age = $v['age'];
             $pttype = $v['pttype'];
+            $pttype_name = $v['pttype_name'];
+            $ward = $v['ward'];
+            $clinic = $v['clinic'];
             if(isset($v['an'])){
               $office = 'หอผู้ป่วย '.$v['ward_name'];
             }else{
-              $office = 'ห้องตรวจ '.$v['clinic'];
+              $office = $v['clinic_name'];
             }
           }
         return Json::encode([
@@ -216,6 +228,9 @@ where a.hn = "'.$hn.'"  and b.vn = (select max(vn) from hospdata.opd_visit where
         'age' => $age,
         'office' => $office,
         'pttype' => $pttype,
+        'pttype_name' => $pttype_name,
+        'ward' => $ward,
+        'clinic' => $clinic,
 
     ]);
     }
@@ -232,14 +247,14 @@ a.hn
 ,c.an
 ,c.admite
 ,c.disc
-,b.dep
-,f.clinic
+,b.dep as clinic
+,f.clinic as clinic_name
 ,c.ward
 ,g.ward as ward_name
 ,CONCAT(a.title,a.name," ",a.surname) as fullname
--- ,a.pttype
+,a.pttype
 ,a.age
-,e.text as pttype
+,e.text as pttype_name
 ,a.birth
 ,CONCAT(a.address
 ,(case a.moo when "" then "" else  CONVERT(concat(" หมู่" , a.moo," ") USING utf8) end)
@@ -260,14 +275,17 @@ where b.vn =  "'.$vn.'"';
 
                     $command = Yii::$app->db->createCommand($sql);
                     $result = $command->queryAll();
-          $fullname = '';
-          $address = '';
-          $pid = '';
-          $hn = '';
-          $an = '';
-          $office = '';
-          $age = '';
-          $pttype = '';
+                    $fullname = '';
+                    $address = '';
+                    $pid = '';
+                    $hn = '';
+                    $an = '';
+                    $office = '';
+                    $age = '';
+                    $pttype = '';
+                    $pttype_name = '';
+                    $ward = '';
+                    $clinic = '';
           foreach ($result as $v){
             $fullname = $v['fullname'];
             $address = $v['address'];
@@ -276,26 +294,93 @@ where b.vn =  "'.$vn.'"';
             $an = $v['an'];
             $age = $v['age'];
             $pttype = $v['pttype'];
+            $pttype_name = $v['pttype_name'];
+            $ward = $v['ward'];
+            $clinic = $v['clinic'];
             if(isset($v['an'])){
               $office = 'หอผู้ป่วย '.$v['ward_name'];
             }else{
-              $office = 'ห้องตรวจ '.$v['clinic'];
+              $office = $v['clinic_name'];
             }
           }
         return Json::encode([
-        'fullname'=> $fullname,
-        'address' => $address,
-        'pid' => $pid,
-        'hn' => $hn,
-        'an' => $an,
-        'age' => $age,
-        'office' => $office,
-        'pttype' => $pttype,
+          'fullname'=> $fullname,
+          'address' => $address,
+          'pid' => $pid,
+          'hn' => $hn,
+          'an' => $an,
+          'age' => $age,
+          'office' => $office,
+          'pttype' => $pttype,
+          'pttype_name' => $pttype_name,
+          'ward' => $ward,
+          'clinic' => $clinic,
 
     ]);
     }
 
+public function actionCytoprice($code){
+    $model = LibCytoType::find()->where(['code'=>$code])->one();
+    return Json::encode([
+      'code'=> $model->code,
+      'name'=> $model->name,
+      'price'=> $model->price,
 
+
+      ]);
+}
+
+public function actionSubvn() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        $preselected = '';
+        if ($parents != null) {
+            $hn = $parents[0];
+
+            $result = $this->getVn($hn);
+
+            $out = [];
+            foreach($result as $v){
+              $out[] = [
+                'id' => $v['id'],
+                'name' => $v['name']
+              ];
+            }
+
+            echo Json::encode(['output'=>$out,'selected'=>'']);
+            return;
+        }
+    }
+    echo Json::encode(['output'=>'', 'selected'=>'']);
+}
+
+protected function getVN($hn){
+
+  $sql = "
+  select
+    a.hn
+    ,b.vn as 'id'
+    ,b.date as visit_date
+    ,CONCAT( b.vn ,' [ ',b.date,' | ',if(f.clinic !='',f.clinic,''),' ] ') as 'name'
+    from hospdata.patient a
+    left join hospdata.opd_visit b on a.hn = b.hn
+    left join hospdata.ipd_ipd c on b.vn = c.vn
+    left join hospdata.province d on a.prov = d.PROVINCE_CODE
+    left join hospdata.lib_pttype e on a.pttype = e.code
+    left join hospdata.lib_clinic f on b.dep = f.code
+    left join hospdata.lib_ward g on c.ward = g.code
+    where a.hn = :hn
+    order by visit_date desc
+    limit 10
+  ";
+  $command = Yii::$app->db->createCommand($sql);
+  $command->bindValue(':hn',$hn);
+  $result = $command->queryAll();
+
+  return $result;
+
+}
 
 
 }

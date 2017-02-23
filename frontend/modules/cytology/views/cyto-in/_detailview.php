@@ -58,7 +58,13 @@ use yii\helpers\ArrayHelper;
 <div class="col-md-6">
 <div class="panel panel-default ">
   <div class="panel-heading">
-    <h3 class="panel-title">ผลการตรวจ <?= $model->cytotype_name ?></h3>
+    <h3 class="panel-title">ผลการตรวจ <?= $model->cytotype_name ?>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <?= Html::a('ลงผลตรวจ', ['update', 'id' => $model->ref], ['class' => 'btn btn-default']) ?>
+    </h3>
+
   </div>
 <div class="panel-body">
 <table class="table table-hover">
@@ -74,8 +80,12 @@ use yii\helpers\ArrayHelper;
   <tr>
       <td>ผลตรวจ 4</td><td><?= $model->result4 ?></td><td><?= $model->r4_detail ?></td>
   </tr>
-  <tr class="warning">
-      <td></td><td><b>ราคา</b></td><td><u><?= $model->price ?></u> บาท</td>
+  <tr class="warning" >
+      <td colspan="3"><center><b>ราคา</b>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <u><?= $model->price ?></u>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <b>บาท</b></center></td>
   </tr>
 </table>
 

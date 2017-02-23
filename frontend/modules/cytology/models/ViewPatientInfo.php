@@ -7,6 +7,7 @@ use Yii;
 /**
  * This is the model class for table "view_patient_info".
  *
+ * @property integer $ref
  * @property string $cn
  * @property string $hn
  * @property string $vn
@@ -15,7 +16,7 @@ use Yii;
  * @property string $pid
  * @property integer $age
  * @property string $address
- * @property string $pttype
+ * @property integer $pttype
  * @property integer $cyto_type
  * @property string $cytotype_name
  * @property integer $price
@@ -46,14 +47,14 @@ class ViewPatientInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['ref', 'age', 'pttype', 'cyto_type', 'price', 'result_level'], 'integer'],
             [['cn'], 'required'],
-            [['age', 'cyto_type', 'price', 'result_level'], 'integer'],
             [['cn'], 'string', 'max' => 10],
             [['hn', 'vn', 'an'], 'string', 'max' => 8],
             [['fullname', 'r1_detail', 'r2_detail', 'r3_detail', 'r4_detail'], 'string', 'max' => 200],
             [['pid'], 'string', 'max' => 13],
             [['address'], 'string', 'max' => 400],
-            [['pttype', 'cytotype_name'], 'string', 'max' => 100],
+            [['cytotype_name'], 'string', 'max' => 100],
             [['result1', 'result2', 'result3', 'result4'], 'string', 'max' => 11],
             [['result_detail'], 'string', 'max' => 1000],
         ];
@@ -65,6 +66,7 @@ class ViewPatientInfo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'ref' => 'Ref',
             'cn' => 'Cn',
             'hn' => 'Hn',
             'vn' => 'Vn',
