@@ -62,10 +62,10 @@ use yii\helpers\ArrayHelper;
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-       <?= Html::a('ลงผลตรวจ', ['update', 'id' => $model->ref], ['class' => 'btn btn-default']) ?>
+      <?= Html::a('ลงผลตรวจ', ['update', 'id' => $model->ref], ['class' => 'btn btn-default']) ?>
     </h3>
+    </div>
 
-  </div>
 <div class="panel-body">
 <table class="table table-hover">
   <tr>

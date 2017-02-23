@@ -66,22 +66,7 @@ GridView::widget([
                 return $model->cytotypeName;
               }
             ],
-            // 'smear_type',
-            // 'specimen',
-            // 'adecuacy',
-            // 'cause',
-            // 'price',
-            // 'result_level',
-            // 'result1',
-            // 'result2',
-            // 'result3',
-            // 'result4',
-            // 'result_detail',
-            // 'comment',
-            // 'cytist1',
-            // 'cytist2',
-            // 'result_date',
-            // 'last_updated',
+            
 
             // ['class' => 'yii\grid\ActionColumn'],
             [

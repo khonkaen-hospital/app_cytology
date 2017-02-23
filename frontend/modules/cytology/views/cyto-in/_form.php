@@ -402,20 +402,20 @@ if(!$model->isNewRecord){
 
 <div class="panel panel-primary" id="result_panel" name = "result_panel" >
   <div class="panel-heading">
-    <h3 class="panel-title">ผลการตรวจ</h3>
+    <h3 class="panel-title">ผลการตรวจ [ CN: <?= $model->cn ?> ] <?= $model->fullname ?></h3>
   </div>
 <div class="panel-body">
 
 <div class="row">
   <!-- <div class="form-group"> -->
   <div class="col-md-6">
-<div class="col-md-3"><label for="search_result1">รหัส ผลตรวจ1</label><input type="number" id="search_result1" class="form-control" placeholder="รหัส"/></div>
+<div class="col-md-3"><label for="search_result1">รหัส ผลตรวจ1</label><input type="text" id="search_result1" class="form-control" placeholder="รหัส"/></div>
 <div class="col-md-9"><?= $form->field($model, 'result1')->dropDownList($lib_result ,['prompt'=>'เลือก ผลตรวจ']) ?></div>
-<div class="col-md-3"><label for="search_result2">รหัส ผลตรวจ2</label><input type="number" id="search_result2" class="form-control" placeholder="รหัส"/></div>
+<div class="col-md-3"><label for="search_result2">รหัส ผลตรวจ2</label><input type="text" id="search_result2" class="form-control" placeholder="รหัส"/></div>
 <div class="col-md-9"><?= $form->field($model, 'result2')->dropDownList($lib_result ,['prompt'=>'เลือก ผลตรวจ']) ?></div>
-<div class="col-md-3"><label for="search_result3">รหัส ผลตรวจ3</label><input type="number" id="search_result3" class="form-control" placeholder="รหัส"/></div>
+<div class="col-md-3"><label for="search_result3">รหัส ผลตรวจ3</label><input type="text" id="search_result3" class="form-control" placeholder="รหัส"/></div>
 <div class="col-md-9"><?= $form->field($model, 'result3')->dropDownList($lib_result ,['prompt'=>'เลือก ผลตรวจ']) ?></div>
-<div class="col-md-3"><label for="search_result4">รหัส ผลตรวจ4</label><input type="number" id="search_result4" class="form-control" placeholder="รหัส"/></div>
+<div class="col-md-3"><label for="search_result4">รหัส ผลตรวจ4</label><input type="text" id="search_result4" class="form-control" placeholder="รหัส"/></div>
 <div class="col-md-9"><?= $form->field($model, 'result4')->dropDownList($lib_result ,['prompt'=>'เลือก ผลตรวจ']) ?></div>
 </div>
 
