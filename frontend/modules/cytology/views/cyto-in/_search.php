@@ -36,7 +36,9 @@ $lib_cyto_type = ArrayHelper::map(LibCytoType::find()->all(), 'code', 'name');
   </div> -->
   <div class="form-group">
       <?= Html::submitButton('<span class="glyphicon glyphicon-search" aria-hidden="true"></span> ค้นหา', ['class' => 'btn btn-primary']) ?>
-      <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> ลงทะเบียนใหม่', ['create'], ['class' => 'btn btn-success']) ?>
+      <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Pap Smear', ['create', 'cyto_type' => '1' ], ['class' => 'btn btn-success']) ?>
+      <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Non-Gyne', ['create', 'cyto_type' => '2' ], ['class' => 'btn btn-success']) ?>
+      <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Thin Prep', ['create', 'cyto_type' => '3' ], ['class' => 'btn btn-success']) ?>
 
   </div>
 

@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
 use kartik\depdrop\DepDrop;
 use yii\widgets\MaskedInput;
 use kartik\select2\Select2;
+use kartik\checkbox\CheckboxX;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\modules\cytology\models\CytoIn */
@@ -32,230 +33,155 @@ $lib_cytist = ArrayHelper::map(LibCytist::find()->all(), 'code', 'name');
 
 ?>
 
-<div class="cyto-in-form">
+<div class="cyto-out-form">
 
   <?php
 
-$this->registerJs("
+  $this->registerJs("
 
+    function CytoPrice() {
+        var code = $('#cytoout-cyto_type').val();
+        $.ajax({
+          url: '" . Url::toRoute("cyto-out/cytoprice") . "',
+          dataType: 'json',
+          method: 'GET',
+          data: {'code': code},
+          success: function (data) {
+          console.log(data.code);
+              $('#cytoout-price').val(data.price);
+          }
+        });
+      }
 
+      CytoPrice();
 
-// $('input,option').keydown(function (e) {
-//      if (e.which === 13) {
-//         e.preventDefault();
-//          var index = $('input,option').index(this) + 1;
-//          $('input,option').eq(index).focus();
-//      }
-//  });
-
-
-
-
-
-  function patientInfo() {
-      var hn = $('#cytoin-hn').val();
-      $.ajax({
-        url: '" . Url::toRoute("cyto-in/patientinfo") . "',
-        dataType: 'json',
-        method: 'GET',
-        data: {'hn': hn},
-        success: function (data) {
-        console.log(data.fullname);
-            $('#cytoin-fullname').val(data.fullname);
-            $('#cytoin-address').val(data.address);
-            $('#cytoin-pid').val(data.pid);
-            $('#cytoin-vn').val(data.vn);
-            $('#cytoin-an').val(data.an);
-            $('#cytoin-age').val(data.age);
-            $('#cytoin-pttype_name').val(data.pttype_name);
-            $('#cytoin-pttype').val(data.pttype);
-            $('#cytoin-clinic_ward').val(data.office);
-            $('#cytoin-clinic').val(data.clinic);
-            $('#cytoin-ward').val(data.ward);
-        }
+      $('#cytoout-cyto_type').on('change', function(e) {
+          CytoPrice();
       });
+
+    function searchSpecimen(){
+      $('#search_specimen').val($('#search_specimen').val().toUpperCase());
+      $('#cytoin-specimen').val($('#search_specimen').val());
+      return false;
+    }
+    function syncSpecimen(){
+      $('#search_specimen').val($('#cytoin-specimen').val());
     }
 
-  function patientInfoByVn(){
-    var vn = $('#depdrop_vn').val();
-    $.ajax({
-        url: '" . Url::toRoute("cyto-in/patientinfobyvn") . "',
-        dataType: 'json',
-        method: 'GET',
-        data: {'vn': vn},
-        success: function (data) {
-        console.log(data.fullname);
-          $('#cytoin-fullname').val(data.fullname);
-          $('#cytoin-address').val(data.address);
-          $('#cytoin-pid').val(data.pid);
-          $('#cytoin-hn').val(data.hn);
-          $('#cytoin-an').val(data.an);
-          $('#cytoin-age').val(data.age);
-          $('#cytoin-pttype_name').val(data.pttype_name);
-          $('#cytoin-pttype').val(data.pttype);
-          $('#cytoin-clinic_ward').val(data.office);
-          $('#cytoin-clinic').val(data.clinic);
-          $('#cytoin-ward').val(data.ward);
-        }
-    });
-  }
-
-  function CytoPrice() {
-      var code = $('#cytoin-cyto_type').val();
-      $.ajax({
-        url: '" . Url::toRoute("cyto-in/cytoprice") . "',
-        dataType: 'json',
-        method: 'GET',
-        data: {'code': code},
-        success: function (data) {
-        console.log(data.code);
-            $('#cytoin-price').val(data.price);
-        }
-      });
+    function searchCause(){
+      $('#cytoin-cause').val($('#search_cause').val());
+    }
+    function syncCause(){
+      $('#search_cause').val($('#cytoin-cause').val());
     }
 
-    CytoPrice();
+    function searchResult1(){
+      $('#cytoin-result1').val($('#search_result1').val()).trigger('change');
+      //$('#cytoin-result1').val($('#search_result1').val()).change();
+      //$('#cytoin-result1').val($('#search_result1').val());
+    }
+    function syncResult1(){
+      $('#search_result1').val($('#cytoin-result1').val());
+    }
 
-    $('#cytoin-cyto_type').on('change', function(e) {
-        CytoPrice();
-    });
+    function searchResult2(){
+      $('#cytoin-result2').val($('#search_result2').val()).trigger('change');
+      //$('#cytoin-result2').val($('#search_result2').val());
+    }
+    function syncResult2(){
+      $('#search_result2').val($('#cytoin-result2').val());
+    }
 
-  function searchSpecimen(){
-    $('#search_specimen').val($('#search_specimen').val().toUpperCase());
-    $('#cytoin-specimen').val($('#search_specimen').val());
-    return false;
-  }
-  function syncSpecimen(){
-    $('#search_specimen').val($('#cytoin-specimen').val());
-  }
+    function searchResult3(){
+      $('#cytoin-result3').val($('#search_result3').val()).trigger('change');
+      //$('#cytoin-result3').val($('#search_result3').val());
+    }
+    function syncResult3(){
+      $('#search_result3').val($('#cytoin-result3').val());
+    }
 
-  function searchCause(){
-    $('#cytoin-cause').val($('#search_cause').val());
-  }
-  function syncCause(){
-    $('#search_cause').val($('#cytoin-cause').val());
-  }
+    function searchResult4(){
+      $('#cytoin-result4').val($('#search_result4').val()).trigger('change');
+      //$('#cytoin-result4').val($('#search_result4').val());
+    }
+    function syncResult4(){
+      $('#search_result4').val($('#cytoin-result4').val());
+    }
 
-  function searchResult1(){
-    $('#cytoin-result1').val($('#search_result1').val()).trigger('change');
-    //$('#cytoin-result1').val($('#search_result1').val()).change();
-    //$('#cytoin-result1').val($('#search_result1').val());
-  }
-  function syncResult1(){
-    $('#search_result1').val($('#cytoin-result1').val());
-  }
+    function searchCytist1(){
+      $('#cytoin-cytist1').val($('#search_cytist1').val());
+    }
+    function syncCytist1(){
+      $('#search_cytist1').val($('#cytoin-cytist1').val());
+    }
 
-  function searchResult2(){
-    $('#cytoin-result2').val($('#search_result2').val()).trigger('change');
-    //$('#cytoin-result2').val($('#search_result2').val());
-  }
-  function syncResult2(){
-    $('#search_result2').val($('#cytoin-result2').val());
-  }
-
-  function searchResult3(){
-    $('#cytoin-result3').val($('#search_result3').val()).trigger('change');
-    //$('#cytoin-result3').val($('#search_result3').val());
-  }
-  function syncResult3(){
-    $('#search_result3').val($('#cytoin-result3').val());
-  }
-
-  function searchResult4(){
-    $('#cytoin-result4').val($('#search_result4').val()).trigger('change');
-    //$('#cytoin-result4').val($('#search_result4').val());
-  }
-  function syncResult4(){
-    $('#search_result4').val($('#cytoin-result4').val());
-  }
-
-  function searchCytist1(){
-    $('#cytoin-cytist1').val($('#search_cytist1').val());
-  }
-  function syncCytist1(){
-    $('#search_cytist1').val($('#cytoin-cytist1').val());
-  }
-
-  function searchCytist2(){
-    $('#cytoin-cytist2').val($('#search_cytist2').val());
-  }
-  function syncCytist2(){
-    $('#search_cytist2').val($('#cytoin-cytist2').val());
-  }
-
-    // $('#cytoin-hn').on('change', function(e) {
-    //     patientInfo();
-    // });
-
-    // $('#cytoin-vn').on('change', function(e) {
-    //     patientInfoByVn();
-    // });
-
-    $('#search_specimen').on('keyup', function(e) {
-        searchSpecimen();
-    });
-    $('#cytoin-specimen').on('change', function(e) {
-        syncSpecimen();
-    });
-
-    $('#search_cause').on('keyup', function(e) {
-        searchCause();
-    });
-    $('#cytoin-cause').on('change', function(e) {
-        syncCause();
-    });
-
-    $('#search_result1').on('change', function(e) {
-        searchResult1();
-    });
-    $('#cytoin-result1').on('change', function(e) {
-        syncResult1();
-    });
-
-    $('#search_result2').on('change', function(e) {
-        searchResult2();
-    });
-    $('#cytoin-result2').on('change', function(e) {
-        syncResult2();
-    });
-
-    $('#search_result3').on('change', function(e) {
-        searchResult3();
-    });
-    $('#cytoin-result3').on('change', function(e) {
-        syncResult3();
-    });
-
-    $('#search_result4').on('change', function(e) {
-        searchResult4();
-    });
-    $('#cytoin-result4').on('change', function(e) {
-        syncResult4();
-    });
-
-    $('#search_cytist1').on('keyup', function(e) {
-        searchCytist1();
-    });
-    $('#cytoin-cytist1').on('change', function(e) {
-        syncCytist1();
-    });
-
-    $('#search_cytist2').on('keyup', function(e) {
-        searchCytist2();
-    });
-    $('#cytoin-cytist2').on('change', function(e) {
-        syncCytist2();
-    });
+    function searchCytist2(){
+      $('#cytoin-cytist2').val($('#search_cytist2').val());
+    }
+    function syncCytist2(){
+      $('#search_cytist2').val($('#cytoin-cytist2').val());
+    }
 
 
-    $('#depdrop_vn').on('change', function(e) {
-      patientInfoByVn();
-      //$('#search_specimen').focus();
-      console.log($(this).val());
+      $('#search_specimen').on('keyup', function(e) {
+          searchSpecimen();
+      });
+      $('#cytoin-specimen').on('change', function(e) {
+          syncSpecimen();
+      });
 
-});
+      $('#search_cause').on('keyup', function(e) {
+          searchCause();
+      });
+      $('#cytoin-cause').on('change', function(e) {
+          syncCause();
+      });
 
-");
+      $('#search_result1').on('change', function(e) {
+          searchResult1();
+      });
+      $('#cytoin-result1').on('change', function(e) {
+          syncResult1();
+      });
+
+      $('#search_result2').on('change', function(e) {
+          searchResult2();
+      });
+      $('#cytoin-result2').on('change', function(e) {
+          syncResult2();
+      });
+
+      $('#search_result3').on('change', function(e) {
+          searchResult3();
+      });
+      $('#cytoin-result3').on('change', function(e) {
+          syncResult3();
+      });
+
+      $('#search_result4').on('change', function(e) {
+          searchResult4();
+      });
+      $('#cytoin-result4').on('change', function(e) {
+          syncResult4();
+      });
+
+      $('#search_cytist1').on('keyup', function(e) {
+          searchCytist1();
+      });
+      $('#cytoin-cytist1').on('change', function(e) {
+          syncCytist1();
+      });
+
+      $('#search_cytist2').on('keyup', function(e) {
+          searchCytist2();
+      });
+      $('#cytoin-cytist2').on('change', function(e) {
+          syncCytist2();
+      });
+
+
+
+  ");
 
 if(!$model->isNewRecord){
   $this->registerJs("
@@ -298,93 +224,120 @@ if(!$model->isNewRecord){
           'options' => ['class'=>'form-control']
         ])->label('วันที่ลงทะเบียน (Ex. 12/02/2560)')
     ?>
-    <?php
-    // echo $form->field($model, 'cn_date')->widget(DatePicker::classname(), [
-    //     'options' => ['placeholder' => 'เลือกวันที่'],
-    //     'language' => 'th',
-    //     'pluginOptions' => [
-    //         'autoclose' => true,
-    //         'format' => 'dd-mm-yyyy',
-    //         'masked' => '99-99-9999',
-    //         'todayHighlight' => true
-    //     ]
-    // ]);
-    ?>
-  </div>
+    </div>
+    <div class="col-md-3">
+      <?= $form->field($model, 'cn')->textInput(['tabIndex'=>'-1','maxlength' => true,'disabled'=>'disabled','placeholder'=>'Automatic']) ?>
+    </div>
+
 </div>
+
 <div class="row">
   <div class="col-md-3">
-
-    <?= $form->field($model, 'hn')->textInput(['maxlength' => true]) ?>
-  </div>
-
-
-
-  <div class="col-md-3">
-    <?= $form->field($model, 'vn')->widget(DepDrop::classname(), [
-       'options' => ['id'=>'depdrop_vn'],
-       'data'=> $out,
-       'pluginOptions'=>[
-          //  'initialize' => true,
-           'depends'=>['cytoin-hn'],
-           'placeholder' => 'เลือก VN',
-           'url' => Url::to(['/cytology/cyto-in/subvn'])
-       ]
-      ]);
-
-
-
-     ?>
-  </div>
-  <div class="col-md-3">
-    <?= $form->field($model, 'an')->textInput(['maxlength' => true,'readonly'=>'readonly']) ?>
-  </div>
-  <div class="col-md-3">
-    <?= $form->field($model, 'cn')->textInput(['tabIndex'=>'-1','maxlength' => true,'disabled'=>'disabled','placeholder'=>'Automatic']) ?>
+    <?= $form->field($model, 'pid_flag', [
+        'template' => '{input}{label}{error}{hint}',
+        'labelOptions' => ['class' => 'cbx-label']
+        ])->widget(CheckboxX::classname(), [
+            'autoLabel'=>false,
+            'pluginOptions'=>[
+                'threeState'=>false
+            ]
+        ]);?>
   </div>
 </div>
-
 
 <div class="row">
   <div class="col-md-3">
   <div class="form-group">
-    <?= $form->field($model, 'pid')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
+
+        <?= $form->field($model, 'pid')->widget(MaskedInput::className(), [
+            'mask' => '9-9999-99999-99-9',
+            'options'=>[
+                'class' => 'form-control',
+                'data'=>['key'=>$model->getRendomKey()]
+             ]
+        ]) ?>
+
   </div>
-</div>
+  </div>
   <div class="form-group">
     <div class="col-md-3">
-      <?= $form->field($model, 'fullname')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
+      <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    </div>
+    <div class="col-md-3">
+      <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    </div>
+    <div class="col-md-3">
+      <?= $form->field($model, 'surname')->textInput(['maxlength' => true]) ?>
+    </div>
+
+</div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-md-3">
+      <?php
+        echo $form->field($model, 'birthdate')->widget(MaskedInput::className(), [
+            'mask' => '99-99-9999',
+            'options' => ['class'=>'form-control']
+          ])->label('วันเกิด (Ex. 12/02/2560)')
+      ?>
     </div>
     <div class="col-md-2">
-      <?= $form->field($model, 'age')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
+      <?= $form->field($model, 'age')->textInput(['maxlength' => true]) ?>
     </div>
-
-
     <div class="col-md-4">
-      <?= $form->field($model, 'pttype_name')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
+    <?= $form->field($model, 'pttype')->textInput(['maxlength' => true]) ?>
     </div>
   </div>
 
-</div>
 
 <div class="row">
 <div class="form-group">
-  <div class="col-md-6">
-      <?= $form->field($model, 'address')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
+  <div class="col-md-3">
+      <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
   </div>
-  <div class="col-md-6">
+  <div class="col-sm-3">
+      <?= $form->field($model, 'prov')->widget(Select2::classname(), [
+        'data' => $changwat,
+        'options' => ['id'=>'dd-changwat','placeholder' => 'เลือกจังหวัด ...'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]); ?>
+  </div>
+  <div class="col-sm-3">
+      <?= $form->field($model, 'amp')->widget(DepDrop::classname(), [
+         'options' => ['id'=>'dd-ampur'],
+         'type'=>DepDrop::TYPE_SELECT2,
+         'data' => $model->isNewRecord ? [] : $model->loadInitAddress($model->prov,'ampur'),
+         'pluginOptions'=>[
+             'depends'=>['dd-changwat'],
+             'placeholder' => 'เลือกอำเภอ...',
+             'url' => Url::to(['/cytology/cyto-out/get-ampur'])
+         ]
+     ]) ?>
+  </div>
+  <div class="col-sm-3">
+    <?= $form->field($model, 'tambol')->widget(DepDrop::classname(), [
+       'options' => ['id'=>'dd-tambon'],
+       'type'=>DepDrop::TYPE_SELECT2,
+       'data' => $model->isNewRecord ? [] : $model->loadInitAddress($model->prov.$model->amp,'tambon'),
+       'pluginOptions'=>[
+           'initialize' => true,
+           'depends'=>['dd-changwat','dd-ampur'],
+           'placeholder' => 'เลือกตำบล...',
+           'url' => Url::to(['/cytology/cyto-out/get-tambon'])
+       ]
+   ]) ?>
+  </div>
+</div>
+</div>
+</div>
+</div>
 
 
-      <?= $form->field($model, 'clinic_ward')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
-    </div>
-</div>
-</div>
-</div>
-</div>
-<?= $form->field($model, 'pttype')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'clinic')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'ward')->hiddenInput()->label(false) ?>
-<?= $form->field($model, 'vn')->hiddenInput()->label(false) ?>
 
 <div class="panel panel-default" >
   <div class="panel-heading">
@@ -425,7 +378,7 @@ if(!$model->isNewRecord){
 
 <div class="panel panel-primary" id="result_panel" name = "result_panel" >
   <div class="panel-heading">
-    <h3 class="panel-title">ผลการตรวจ [ CN: <?= $model->cn ?> ] <?= $model->fullname ?></h3>
+    <h3 class="panel-title">ผลการตรวจ [ CN: <?= $model->cn ?> ] </h3>
   </div>
 <div class="panel-body">
 
@@ -545,3 +498,18 @@ if(!$model->isNewRecord){
 </div>
 </div>
 </div>
+
+<?php $this->registerJs("
+    if($('#cytoout-pid_flag').val() == 1){
+        $('#cytoout-pid').prop('readonly',true);
+    }
+    $('#cytoout-pid_flag').on('change', function (e) {
+        if($(this).val()==1){
+            $('#cytoout-pid').prop('readonly', true);
+            $('#cytoout-pid').val($('#cytoout-pid').data('key'));
+        }else{
+            $('#cytoout-pid').prop('readonly', false);
+            $('#cytoout-pid').val(null);
+        }
+    });
+"); ?>

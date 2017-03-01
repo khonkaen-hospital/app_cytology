@@ -52,7 +52,7 @@ GridView::widget([
                 ]);
               }
             ],
-            'cn_date',
+            'cn_date:date',
             'cn',
             'hn',
             'fullname',
@@ -66,7 +66,7 @@ GridView::widget([
                 return $model->cytotypeName;
               }
             ],
-            
+
 
             // ['class' => 'yii\grid\ActionColumn'],
             [

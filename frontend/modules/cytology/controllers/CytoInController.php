@@ -66,10 +66,13 @@ class CytoInController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($cyto_type)
     {
+        $current_year = (integer)date("Y")+543;
+        $current_cm = date("d-m");
+        $current_date = $current_cm.'-'.$current_year;
 
-        $model = new CytoIn();
+        $model = new CytoIn(['cyto_type'=>$cyto_type,'cn_date'=>$current_date]);
         $mymax = CytoIn::find()
             ->orderBy('ref DESC')
             ->one();
@@ -82,8 +85,13 @@ class CytoInController extends Controller
             $running_no = sprintf('%04d',(($mymax->ref)+1));
             $cn_no = $thaiyear.$month.'01'.$running_no;
 
-            $model->cn = $cn_no;
 
+            $originalDate = $_POST['CytoIn']['cn_date'];
+            $cn_date = $this->convertDatebeforesave($originalDate);
+
+
+            $model->cn = $cn_no;
+            $model->cn_date = $cn_date;
             $model->save();
             return $this->redirect(['index']);
             // return $this->redirect(['view', 'id' => $model->ref]);
@@ -109,10 +117,22 @@ class CytoInController extends Controller
     {
         $model = $this->findModel($id);
         $hn = $model->hn;
-
         $out = ArrayHelper::map($this->getVn($hn),'id','name');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $originalDate = $model->cn_date;
+        $cn_date = $this->convertDatebeforeshow($originalDate);
+        // $cn_year = (integer)(date("Y", strtotime($originalDate)))+543;
+        // $cn_dm = date("d-m", strtotime($originalDate));
+        //
+        // $cn_date = $cn_dm.'-'.$cn_year;
+        $model->cn_date = $cn_date;
+
+        if ($model->load(Yii::$app->request->post())) {
+          $model->attributes = Yii::$app->request->post('CytoIn');
+          $originalDate = $_POST['CytoIn']['cn_date'];
+          $cn_date = $this->convertDatebeforesave($originalDate);
+          $model->cn_date = $cn_date;
+          $model->save();
           return $this->redirect(['index']);
             // return $this->redirect(['view', 'id' => $model->ref]);
         } else {
@@ -380,6 +400,26 @@ protected function getVN($hn){
 
   return $result;
 
+}
+
+private function convertDatebeforesave($date){
+        $originalDate = $date;
+        $cn_year = (integer)(date("Y", strtotime($originalDate)))-543;
+        $cn_dm = date("m-d", strtotime($originalDate));
+
+        $cn_date = $cn_year.'-'.$cn_dm;
+
+        return $cn_date;
+}
+
+private function convertDatebeforeshow($date){
+        $originalDate = $date;
+        $cn_year = (integer)(date("Y", strtotime($originalDate)))+543;
+        $cn_dm = date("d-m", strtotime($originalDate));
+
+        $cn_date = $cn_dm.'-'.$cn_year;
+
+        return $cn_date;
 }
 
 

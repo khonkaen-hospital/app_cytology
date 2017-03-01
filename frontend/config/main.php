@@ -10,6 +10,7 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'th-TH',
     'controllerNamespace' => 'frontend\controllers',
     'modules' => [
         'cytology' => [
