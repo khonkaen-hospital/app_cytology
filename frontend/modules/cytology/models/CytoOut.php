@@ -4,8 +4,6 @@ namespace frontend\modules\cytology\models;
 
 use Yii;
 
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 use common\behaviors\AttributeValueBehavior;
 use yii\db\ActiveRecord;
 
@@ -52,6 +50,8 @@ use yii\db\ActiveRecord;
  */
 class CytoOut extends \yii\db\ActiveRecord
 {
+
+    use \frontend\modules\cytology\traits\ItemsAliasTrait;
     /**
      * @inheritdoc
      */
@@ -76,6 +76,25 @@ class CytoOut extends \yii\db\ActiveRecord
             ],
             'value' => function ($event, $attribute) {
                 return  str_replace('-', '', $this->owner->$attribute);
+            },
+          ],
+          [
+            'class' => AttributeValueBehavior::className(),
+            'attributes' => [
+            ActiveRecord::EVENT_BEFORE_INSERT => ['birthdate','cn_date','result_date'],
+            ActiveRecord::EVENT_BEFORE_UPDATE => ['birthdate','cn_date','result_date'],
+            ],
+            'value' => function ($event, $attribute) {
+                return $this->convertDatebeforesave($this->owner->$attribute);
+            },
+          ],
+          [
+            'class' => AttributeValueBehavior::className(),
+            'attributes' => [
+            ActiveRecord::EVENT_AFTER_FIND => ['birthdate','cn_date','result_date'],
+            ],
+            'value' => function ($event, $attribute) {
+                return $this->convertDatebeforeshow($this->owner->$attribute);
             },
           ],
         ];
@@ -116,7 +135,7 @@ class CytoOut extends \yii\db\ActiveRecord
             'pttype' => 'สิทธิการรักษา',
             'pttype_name' => 'Pttype Name',
             'requester' => 'Requester',
-            'hospcode' => 'Hospcode',
+            'hospcode' => 'สถานพยาบาล',
             'hospname' => 'Hospname',
             'address' => 'ที่อยู่',
             'tambol' => 'ตำบล',
@@ -159,6 +178,26 @@ class CytoOut extends \yii\db\ActiveRecord
     public function getRendomKey($lenght=13)
      {
          return uniqid(mt_rand(), true);
+     }
+
+     public function convertDatebeforesave($date){
+             $originalDate = $date;
+             $cn_year = (integer)(date("Y", strtotime($originalDate)))-543;
+             $cn_dm = date("m-d", strtotime($originalDate));
+
+             $cn_date = $cn_year.'-'.$cn_dm;
+
+             return $cn_date;
+     }
+
+     public function convertDatebeforeshow($date){
+             $originalDate = $date;
+             $cn_year = (integer)(date("Y", strtotime($originalDate)))+543;
+             $cn_dm = date("d-m", strtotime($originalDate));
+
+             $cn_date = $cn_dm.'-'.$cn_year;
+
+             return $cn_date;
      }
 
 }

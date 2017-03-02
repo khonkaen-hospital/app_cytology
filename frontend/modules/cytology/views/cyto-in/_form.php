@@ -296,7 +296,7 @@ if(!$model->isNewRecord){
       echo $form->field($model, 'cn_date')->widget(MaskedInput::className(), [
           'mask' => '99-99-9999',
           'options' => ['class'=>'form-control']
-        ])->label('วันที่ลงทะเบียน (Ex. 12/02/2560)')
+        ])->label('วันที่ลงทะเบียน (Ex. 28-02-2560)')
     ?>
     <?php
     // echo $form->field($model, 'cn_date')->widget(DatePicker::classname(), [
@@ -348,7 +348,14 @@ if(!$model->isNewRecord){
 <div class="row">
   <div class="col-md-3">
   <div class="form-group">
-    <?= $form->field($model, 'pid')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
+    <?= $form->field($model, 'pid')->widget(MaskedInput::className(), [
+        'mask' => '9-9999-99999-99-9',
+        'options'=>[
+            'class' => 'form-control',
+            'readonly'=>'readonly'
+         ]
+    ]) ?>
+    <?php // $form->field($model, 'pid')->textInput(['tabIndex'=>'-1','maxlength' => true,'readonly'=>'readonly']) ?>
   </div>
 </div>
   <div class="form-group">
@@ -511,15 +518,21 @@ if(!$model->isNewRecord){
   </div>
   <div class="col-md-6">
     <?php
-    echo $form->field($model, 'result_date')->widget(DatePicker::classname(), [
-        'options' => ['placeholder' => 'เลือกวันที่'],
-        'language' => 'th',
-        'pluginOptions' => [
-            'autoclose' => true,
-            'format' => 'yyyy-mm-dd',
-            'todayHighlight' => true
-        ]
-    ]);
+      echo $form->field($model, 'result_date')->widget(MaskedInput::className(), [
+          'mask' => '99-99-9999',
+          'options' => ['class'=>'form-control']
+        ])->label('วันที่ลงผลตรวจ (Ex. 28-02-2560)')
+    ?>
+    <?php
+    // echo $form->field($model, 'result_date')->widget(DatePicker::classname(), [
+    //     'options' => ['placeholder' => 'เลือกวันที่'],
+    //     'language' => 'th',
+    //     'pluginOptions' => [
+    //         'autoclose' => true,
+    //         'format' => 'yyyy-mm-dd',
+    //         'todayHighlight' => true
+    //     ]
+    // ]);
     ?>
   </div>
 </div>

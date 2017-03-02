@@ -85,20 +85,10 @@ class CytoInController extends Controller
             $running_no = sprintf('%04d',(($mymax->ref)+1));
             $cn_no = $thaiyear.$month.'01'.$running_no;
 
-
-            $originalDate = $_POST['CytoIn']['cn_date'];
-            $cn_date = $this->convertDatebeforesave($originalDate);
-
-
             $model->cn = $cn_no;
-            $model->cn_date = $cn_date;
             $model->save();
             return $this->redirect(['index']);
-            // return $this->redirect(['view', 'id' => $model->ref]);
-            // return $this->refresh();
 
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->ref]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -119,19 +109,9 @@ class CytoInController extends Controller
         $hn = $model->hn;
         $out = ArrayHelper::map($this->getVn($hn),'id','name');
 
-        $originalDate = $model->cn_date;
-        $cn_date = $this->convertDatebeforeshow($originalDate);
-        // $cn_year = (integer)(date("Y", strtotime($originalDate)))+543;
-        // $cn_dm = date("d-m", strtotime($originalDate));
-        //
-        // $cn_date = $cn_dm.'-'.$cn_year;
-        $model->cn_date = $cn_date;
 
         if ($model->load(Yii::$app->request->post())) {
           $model->attributes = Yii::$app->request->post('CytoIn');
-          $originalDate = $_POST['CytoIn']['cn_date'];
-          $cn_date = $this->convertDatebeforesave($originalDate);
-          $model->cn_date = $cn_date;
           $model->save();
           return $this->redirect(['index']);
             // return $this->redirect(['view', 'id' => $model->ref]);

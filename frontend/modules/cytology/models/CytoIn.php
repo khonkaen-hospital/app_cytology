@@ -4,6 +4,8 @@ namespace frontend\modules\cytology\models;
 
 use Yii;
 
+use common\behaviors\AttributeValueBehavior;
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "cyto_in".
  *
@@ -54,6 +56,43 @@ class CytoIn extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
+
+     public function behaviors()
+    {
+        return [
+          [
+            'class' => AttributeValueBehavior::className(),
+            'attributes' => [
+            ActiveRecord::EVENT_BEFORE_INSERT => ['pid'],
+            ActiveRecord::EVENT_BEFORE_UPDATE => ['pid'],
+            ],
+            'value' => function ($event, $attribute) {
+                return  str_replace('-', '', $this->owner->$attribute);
+            },
+          ],
+          [
+            'class' => AttributeValueBehavior::className(),
+            'attributes' => [
+            ActiveRecord::EVENT_BEFORE_INSERT => ['cn_date','result_date'],
+            ActiveRecord::EVENT_BEFORE_UPDATE => ['cn_date','result_date'],
+            ],
+            'value' => function ($event, $attribute) {
+                return $this->convertDatebeforesave($this->owner->$attribute);
+            },
+          ],
+          [
+            'class' => AttributeValueBehavior::className(),
+            'attributes' => [
+            ActiveRecord::EVENT_AFTER_FIND => ['cn_date','result_date'],
+            ],
+            'value' => function ($event, $attribute) {
+                return $this->convertDatebeforeshow($this->owner->$attribute);
+            },
+          ],
+        ];
+    }
+
     public function rules()
     {
         return [
@@ -63,7 +102,7 @@ class CytoIn extends \yii\db\ActiveRecord
             [['cn', 'specimen'], 'string', 'max' => 10],
             [['hn', 'vn', 'an'], 'string', 'max' => 8],
             [['fullname'], 'string', 'max' => 200],
-            [['pid'], 'string', 'max' => 13],
+            [['pid'], 'string'],
             [['pttype_name', 'clinic_ward'], 'string', 'max' => 100],
             [['address'], 'string', 'max' => 400],
             [['result1', 'result2', 'result3', 'result4'], 'string', 'max' => 11],
@@ -128,5 +167,25 @@ class CytoIn extends \yii\db\ActiveRecord
 
     public function getCytotypeName() {
         return @$this->cytoType->name;
+    }
+
+    public function convertDatebeforesave($date){
+            $originalDate = $date;
+            $cn_year = (integer)(date("Y", strtotime($originalDate)))-543;
+            $cn_dm = date("m-d", strtotime($originalDate));
+
+            $cn_date = $cn_year.'-'.$cn_dm;
+
+            return $cn_date;
+    }
+
+    public function convertDatebeforeshow($date){
+            $originalDate = $date;
+            $cn_year = (integer)(date("Y", strtotime($originalDate)))+543;
+            $cn_dm = date("d-m", strtotime($originalDate));
+
+            $cn_date = $cn_dm.'-'.$cn_year;
+
+            return $cn_date;
     }
 }

@@ -6,6 +6,7 @@ use Yii;
 use frontend\modules\cytology\models\CytoOut;
 use frontend\modules\cytology\models\CytoOutSearch;
 use frontend\modules\cytology\models\LibCytoType;
+use frontend\modules\cytology\models\LibHospcode;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -91,16 +92,11 @@ class CytoOutController extends Controller
           $running_no = sprintf('%04d',(isset($mymax))?(($mymax->ref)+1):1);
           $cn_no = $thaiyear.$month.'02'.$running_no;
 
-
-          $originalDate = $_POST['CytoOut']['cn_date'];
-          $cn_date = $this->convertDatebeforesave($originalDate);
-
-
+          $model->age = $this->getAge($_POST['CytoOut']['birthdate'],$_POST['CytoOut']['cn_date']);
           $model->cn = $cn_no;
-          $model->cn_date = $cn_date;
           $model->save();
-
-            return $this->redirect(['view', 'id' => $model->ref]);
+          return $this->redirect(['index']);
+            //return $this->redirect(['view', 'id' => $model->ref]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -118,24 +114,21 @@ class CytoOutController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        $originalDate = $model->cn_date;
-        $cn_date = $this->convertDatebeforeshow($originalDate);
-        $model->cn_date = $cn_date;
+        $fullage = $model->getCurrentAgeOnCN('birthdate','cn_date');
 
         if ($model->load(Yii::$app->request->post())) {
 
           $model->attributes = Yii::$app->request->post('CytoOut');
-          $originalDate = $_POST['CytoOut']['cn_date'];
-          $cn_date = $this->convertDatebeforesave($originalDate);
-          $model->cn_date = $cn_date;
-          $model->save();
 
-            return $this->redirect(['view', 'id' => $model->ref]);
+          $model->age = $this->getAge($_POST['CytoOut']['birthdate'],$_POST['CytoOut']['cn_date']);
+          $model->save();
+          return $this->redirect(['index']);
+            //return $this->redirect(['view', 'id' => $model->ref]);
         } else {
             return $this->render('update', [
                 'model' => $model,
                 'changwat' => $this->getChangwat(),
+                'fullage' => $fullage,
             ]);
         }
     }
@@ -198,25 +191,7 @@ class CytoOutController extends Controller
         ]);
     }
 
-    private function convertDatebeforesave($date){
-            $originalDate = $date;
-            $cn_year = (integer)(date("Y", strtotime($originalDate)))-543;
-            $cn_dm = date("m-d", strtotime($originalDate));
 
-            $cn_date = $cn_year.'-'.$cn_dm;
-
-            return $cn_date;
-    }
-
-    private function convertDatebeforeshow($date){
-            $originalDate = $date;
-            $cn_year = (integer)(date("Y", strtotime($originalDate)))+543;
-            $cn_dm = date("d-m", strtotime($originalDate));
-
-            $cn_date = $cn_dm.'-'.$cn_year;
-
-            return $cn_date;
-    }
 
     public function actionCytoprice($code){
         $model = LibCytoType::find()->where(['code'=>$code])->one();
@@ -228,5 +203,37 @@ class CytoOutController extends Controller
 
           ]);
     }
+
+    public function getAge($birthdate,$curdate){
+      $age = date_diff(date_create($birthdate), date_create($curdate))->y;
+      return $age;
+    }
+
+    public function actionHospList($q = null, $id = null) {
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $out = ['results' => ['id' => '', 'text' => '']];
+    if (!is_null($q)) {
+
+      $sql = 'select code5 as id,name as text
+        from lib_hospcode
+        where name like "%'.$q.'%"
+        limit 20
+      ';
+      $command = Yii::$app->db->createCommand($sql);
+      //$result = $command->queryAll();
+        // $query = new Query;
+        // $query->select('code5 as id, name AS text')
+        //     ->from('lib_hospcode')
+        //     ->where(['like', 'name', $q])
+        //     ->limit(20);
+        // $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+    }
+    elseif ($id > 0) {
+        $out['results'] = ['id' => $id, 'text' => LibHospcode::find($id)->name];
+    }
+    return $out;
+}
 
 }

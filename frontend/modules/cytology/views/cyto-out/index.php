@@ -26,11 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'ref',
             'cn',
-            'cn_date',
+            'cn_date:date',
             'title',
             'name',
             // 'surname',
-            // 'birthdate',
+            'birthdate:date',
             // 'age',
             // 'pid',
             // 'pttype',

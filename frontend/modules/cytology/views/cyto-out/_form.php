@@ -12,12 +12,16 @@ use frontend\modules\cytology\models\LibAdequacy;
 use frontend\modules\cytology\models\LibResult;
 use frontend\modules\cytology\models\LibAdequacySpecimen;
 use frontend\modules\cytology\models\LibCytist;
+use frontend\modules\cytology\models\LibPttype;
+use frontend\modules\cytology\models\LibHospcode;
 use yii\helpers\ArrayHelper;
 use kartik\depdrop\DepDrop;
 use yii\widgets\MaskedInput;
 use kartik\select2\Select2;
 use kartik\checkbox\CheckboxX;
+use yii\web\JsExpression;
 
+//echo $fullage;
 /* @var $this yii\web\View */
 /* @var $model frontend\modules\cytology\models\CytoIn */
 /* @var $form yii\widgets\ActiveForm */
@@ -29,7 +33,8 @@ $lib_result = ArrayHelper::map(LibResult::find()->all(), 'code', 'result');
 $lib_adequacy = ArrayHelper::map(LibAdequacy::find()->all(), 'code', 'name');
 $lib_adequacy_specimen = ArrayHelper::map(LibAdequacySpecimen::find()->all(), 'code', 'name');
 $lib_cytist = ArrayHelper::map(LibCytist::find()->all(), 'code', 'name');
-
+$lib_pttype = ArrayHelper::map(LibPttype::find()->all(), 'code', 'text');
+// $lib_hospcode = ArrayHelper::map(LibHospcode::find()->all(), 'code5', 'name');
 
 ?>
 
@@ -222,7 +227,7 @@ if(!$model->isNewRecord){
       echo $form->field($model, 'cn_date')->widget(MaskedInput::className(), [
           'mask' => '99-99-9999',
           'options' => ['class'=>'form-control']
-        ])->label('วันที่ลงทะเบียน (Ex. 12/02/2560)')
+        ])->label('วันที่ลงทะเบียน (Ex. 28-02-2560)')
     ?>
     </div>
     <div class="col-md-3">
@@ -281,14 +286,48 @@ if(!$model->isNewRecord){
         echo $form->field($model, 'birthdate')->widget(MaskedInput::className(), [
             'mask' => '99-99-9999',
             'options' => ['class'=>'form-control']
-          ])->label('วันเกิด (Ex. 12/02/2560)')
+          ])->label('วันเกิด (Ex. 28-02-2560)')
       ?>
     </div>
-    <div class="col-md-2">
-      <?= $form->field($model, 'age')->textInput(['maxlength' => true]) ?>
+    <div class="col-md-3">
+    <?=
+      $form->field($model, 'pttype')->widget(Select2::classname(), [
+        'data' => $lib_pttype,
+        'language' => 'th',
+        'options' => ['placeholder' => 'เลือก สิทธิการรักษา'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+      ]);
+    ?>
     </div>
     <div class="col-md-4">
-    <?= $form->field($model, 'pttype')->textInput(['maxlength' => true]) ?>
+      <?php
+        $url = Url::to(['cyto-out/hosp-list']);
+        $hospDesc = empty($model->hospcode) ? '' : LibHospcode::findOne($model->hospcode)->name;
+
+        echo $form->field($model, 'hospcode')->widget(Select2::classname(), [
+            'initValueText' => $hospDesc, // set the initial display text
+            'options' => ['placeholder' => 'ค้นหา สถานพยาบาล'],
+        'pluginOptions' => [
+            'allowClear' => true,
+            'minimumInputLength' => 3,
+            'language' => [
+                'errorLoading' => new JsExpression("function () { return 'Waiting for results...'; }"),
+            ],
+            'ajax' => [
+                'url' => $url,
+                'dataType' => 'json',
+                'data' => new JsExpression('function(params) { return {q:params.term}; }')
+            ],
+            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+            'templateResult' => new JsExpression('function(city) { return city.text; }'),
+            'templateSelection' => new JsExpression('function (city) { return city.text; }'),
+        ],
+        ]);
+
+       ?>
+
     </div>
   </div>
 
@@ -464,16 +503,12 @@ if(!$model->isNewRecord){
   </div>
   <div class="col-md-6">
     <?php
-    echo $form->field($model, 'result_date')->widget(DatePicker::classname(), [
-        'options' => ['placeholder' => 'เลือกวันที่'],
-        'language' => 'th',
-        'pluginOptions' => [
-            'autoclose' => true,
-            'format' => 'yyyy-mm-dd',
-            'todayHighlight' => true
-        ]
-    ]);
+      echo $form->field($model, 'result_date')->widget(MaskedInput::className(), [
+          'mask' => '99-99-9999',
+          'options' => ['class'=>'form-control']
+        ])->label('วันที่ลงผลตรวจ (Ex. 28-02-2560)')
     ?>
+
   </div>
 </div>
 
