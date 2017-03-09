@@ -15,15 +15,16 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'ref') ?>
-
-    <?= $form->field($model, 'cn') ?>
-
-    <?= $form->field($model, 'cn_date') ?>
-
-    <?= $form->field($model, 'title') ?>
-
-    <?= $form->field($model, 'name') ?>
+    <div class="row">
+      <div class="col-md-2">
+        <?= $form->field($model, 'cn')->textInput(['placeholder'=>'CN'])->label(false) ?>
+      </div>
+      <div class="col-md-2">
+        <?= $form->field($model, 'pid')->textInput(['placeholder'=>'PID'])->label(false) ?>
+      </div>
+      <div class="col-md-2">
+        <?= $form->field($model, 'name')->textInput(['placeholder'=>'name'])->label(false) ?>
+      </div>
 
     <?php // echo $form->field($model, 'surname') ?>
 
@@ -31,7 +32,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'age') ?>
 
-    <?php // echo $form->field($model, 'pid') ?>
+
 
     <?php // echo $form->field($model, 'pttype') ?>
 
@@ -86,9 +87,12 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'last_updated') ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(Yii::t('app', 'ค้นหา'), ['class' => 'btn btn-primary']) ?>
+        <?php // Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> ลงทะเบียนผู้ป่วยใหม่ นอก รพ.', ['create'], ['class' => 'btn btn-success']) ?>
+
     </div>
+  </div>
 
     <?php ActiveForm::end(); ?>
 

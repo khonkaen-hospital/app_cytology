@@ -34,6 +34,7 @@ $lib_adequacy = ArrayHelper::map(LibAdequacy::find()->all(), 'code', 'name');
 $lib_adequacy_specimen = ArrayHelper::map(LibAdequacySpecimen::find()->all(), 'code', 'name');
 $lib_cytist = ArrayHelper::map(LibCytist::find()->all(), 'code', 'name');
 $lib_pttype = ArrayHelper::map(LibPttype::find()->all(), 'code', 'text');
+$lib_titles = $model->getTitles();
 // $lib_hospcode = ArrayHelper::map(LibHospcode::find()->all(), 'code5', 'name');
 
 ?>
@@ -66,121 +67,121 @@ $lib_pttype = ArrayHelper::map(LibPttype::find()->all(), 'code', 'text');
 
     function searchSpecimen(){
       $('#search_specimen').val($('#search_specimen').val().toUpperCase());
-      $('#cytoin-specimen').val($('#search_specimen').val());
+      $('#cytoout-specimen').val($('#search_specimen').val());
       return false;
     }
     function syncSpecimen(){
-      $('#search_specimen').val($('#cytoin-specimen').val());
+      $('#search_specimen').val($('#cytoout-specimen').val());
     }
 
     function searchCause(){
-      $('#cytoin-cause').val($('#search_cause').val());
+      $('#cytoout-cause').val($('#search_cause').val());
     }
     function syncCause(){
-      $('#search_cause').val($('#cytoin-cause').val());
+      $('#search_cause').val($('#cytoout-cause').val());
     }
 
     function searchResult1(){
-      $('#cytoin-result1').val($('#search_result1').val()).trigger('change');
-      //$('#cytoin-result1').val($('#search_result1').val()).change();
-      //$('#cytoin-result1').val($('#search_result1').val());
+      $('#cytoout-result1').val($('#search_result1').val()).trigger('change');
+      //$('#cytoout-result1').val($('#search_result1').val()).change();
+      //$('#cytoout-result1').val($('#search_result1').val());
     }
     function syncResult1(){
-      $('#search_result1').val($('#cytoin-result1').val());
+      $('#search_result1').val($('#cytoout-result1').val());
     }
 
     function searchResult2(){
-      $('#cytoin-result2').val($('#search_result2').val()).trigger('change');
-      //$('#cytoin-result2').val($('#search_result2').val());
+      $('#cytoout-result2').val($('#search_result2').val()).trigger('change');
+      //$('#cytoout-result2').val($('#search_result2').val());
     }
     function syncResult2(){
-      $('#search_result2').val($('#cytoin-result2').val());
+      $('#search_result2').val($('#cytoout-result2').val());
     }
 
     function searchResult3(){
-      $('#cytoin-result3').val($('#search_result3').val()).trigger('change');
-      //$('#cytoin-result3').val($('#search_result3').val());
+      $('#cytoout-result3').val($('#search_result3').val()).trigger('change');
+      //$('#cytoout-result3').val($('#search_result3').val());
     }
     function syncResult3(){
-      $('#search_result3').val($('#cytoin-result3').val());
+      $('#search_result3').val($('#cytoout-result3').val());
     }
 
     function searchResult4(){
-      $('#cytoin-result4').val($('#search_result4').val()).trigger('change');
-      //$('#cytoin-result4').val($('#search_result4').val());
+      $('#cytoout-result4').val($('#search_result4').val()).trigger('change');
+      //$('#cytoout-result4').val($('#search_result4').val());
     }
     function syncResult4(){
-      $('#search_result4').val($('#cytoin-result4').val());
+      $('#search_result4').val($('#cytoout-result4').val());
     }
 
     function searchCytist1(){
-      $('#cytoin-cytist1').val($('#search_cytist1').val());
+      $('#cytoout-cytist1').val($('#search_cytist1').val());
     }
     function syncCytist1(){
-      $('#search_cytist1').val($('#cytoin-cytist1').val());
+      $('#search_cytist1').val($('#cytoout-cytist1').val());
     }
 
     function searchCytist2(){
-      $('#cytoin-cytist2').val($('#search_cytist2').val());
+      $('#cytoout-cytist2').val($('#search_cytist2').val());
     }
     function syncCytist2(){
-      $('#search_cytist2').val($('#cytoin-cytist2').val());
+      $('#search_cytist2').val($('#cytoout-cytist2').val());
     }
 
 
       $('#search_specimen').on('keyup', function(e) {
           searchSpecimen();
       });
-      $('#cytoin-specimen').on('change', function(e) {
+      $('#cytoout-specimen').on('change', function(e) {
           syncSpecimen();
       });
 
       $('#search_cause').on('keyup', function(e) {
           searchCause();
       });
-      $('#cytoin-cause').on('change', function(e) {
+      $('#cytoout-cause').on('change', function(e) {
           syncCause();
       });
 
       $('#search_result1').on('change', function(e) {
           searchResult1();
       });
-      $('#cytoin-result1').on('change', function(e) {
+      $('#cytoout-result1').on('change', function(e) {
           syncResult1();
       });
 
       $('#search_result2').on('change', function(e) {
           searchResult2();
       });
-      $('#cytoin-result2').on('change', function(e) {
+      $('#cytoout-result2').on('change', function(e) {
           syncResult2();
       });
 
       $('#search_result3').on('change', function(e) {
           searchResult3();
       });
-      $('#cytoin-result3').on('change', function(e) {
+      $('#cytoout-result3').on('change', function(e) {
           syncResult3();
       });
 
       $('#search_result4').on('change', function(e) {
           searchResult4();
       });
-      $('#cytoin-result4').on('change', function(e) {
+      $('#cytoout-result4').on('change', function(e) {
           syncResult4();
       });
 
       $('#search_cytist1').on('keyup', function(e) {
           searchCytist1();
       });
-      $('#cytoin-cytist1').on('change', function(e) {
+      $('#cytoout-cytist1').on('change', function(e) {
           syncCytist1();
       });
 
       $('#search_cytist2').on('keyup', function(e) {
           searchCytist2();
       });
-      $('#cytoin-cytist2').on('change', function(e) {
+      $('#cytoout-cytist2').on('change', function(e) {
           syncCytist2();
       });
 
@@ -265,13 +266,13 @@ if(!$model->isNewRecord){
   </div>
   </div>
   <div class="form-group">
-    <div class="col-md-3">
-      <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <div class="col-md-2">
+      <?= $form->field($model, 'title')->dropDownList(['นาง'=>'นาง','นางสาว'=>'นางสาว','ด.ญ.'=>'ด.ญ.']) ?>
     </div>
     <div class="col-md-3">
       <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <?= $form->field($model, 'surname')->textInput(['maxlength' => true]) ?>
     </div>
 
@@ -301,10 +302,11 @@ if(!$model->isNewRecord){
       ]);
     ?>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
+
       <?php
         $url = Url::to(['cyto-out/hosp-list']);
-        $hospDesc = empty($model->hospcode) ? '' : LibHospcode::findOne($model->hospcode)->name;
+        $hospDesc = empty($model->hospcode) ? '' : LibHospcode::findOne(['code5' =>$model->hospcode])->name;
 
         echo $form->field($model, 'hospcode')->widget(Select2::classname(), [
             'initValueText' => $hospDesc, // set the initial display text

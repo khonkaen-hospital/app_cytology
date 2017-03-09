@@ -60,6 +60,9 @@ class CytoOut extends \yii\db\ActiveRecord
         return 'cyto_out';
     }
 
+    const T_GIRL = 1;
+    const T_MISS = 2;
+    const T_MRS = 3;
     /**
      * @inheritdoc
      */
@@ -124,7 +127,7 @@ class CytoOut extends \yii\db\ActiveRecord
         return [
             'ref' => 'Ref',
             'cn' => 'Cn',
-            'cn_date' => 'Cn Date',
+            'cn_date' => 'วันที่ลงทะเบียน',
             'title' => 'คำนำหน้า',
             'name' => 'ชื่อ',
             'surname' => 'นามสกุล',
@@ -145,18 +148,18 @@ class CytoOut extends \yii\db\ActiveRecord
             'smear_type' => 'Smear Type',
             'specimen' => 'Specimen',
             'adequacy' => 'Adequacy',
-            'cause' => 'Cause',
-            'price' => 'Price',
-            'result_level' => 'Result Level',
-            'result1' => 'Result1',
-            'result2' => 'Result2',
-            'result3' => 'Result3',
-            'result4' => 'Result4',
-            'result_detail' => 'Result Detail',
+            'cause' => 'สาเหตุ',
+            'price' => 'ราคา',
+            'result_level' => 'ระดับความรุนแรง',
+            'result1' => 'ผลตรวจ 1',
+            'result2' => 'ผลตรวจ 2',
+            'result3' => 'ผลตรวจ 3',
+            'result4' => 'ผลตรวจ 4',
+            'result_detail' => 'บันทึกผลการตรวจ',
             'comment' => 'Comment',
-            'cytist1' => 'Cytist1',
-            'cytist2' => 'Cytist2',
-            'result_date' => 'Result Date',
+            'cytist1' => 'ผู้อ่านผล 1',
+            'cytist2' => 'ผู้อ่านผล 2',
+            'result_date' => 'วันที่ลงผลการตรวจ',
             'last_updated' => 'Last Updated',
         ];
     }
@@ -168,6 +171,39 @@ class CytoOut extends \yii\db\ActiveRecord
     public static function find()
     {
         return new CytoOutQuery(get_called_class());
+    }
+
+    public static function itemAlias($type) {
+        $items = [
+            'titles' => [
+                self::T_MRS => 'นาง',
+                self::T_MISS => 'นางสาว',
+                self::T_GIRL => 'ด.ญ.',
+
+            ],
+        ];
+        return array_key_exists($type, $items) ? $items[$type] : [];
+        //
+    }
+
+    public function getTitles() {
+       return self::itemAlias('titles');
+   }
+
+    public function getCytoType() {
+        return @$this->hasOne(LibCytoType::className(), ['code' => 'cyto_type']);
+    }
+
+    public function getCytotypeName() {
+        return @$this->cytoType->name;
+    }
+
+    public function getHospCode() {
+        return @$this->hasOne(LibHospcode::className(), ['code5' => 'hospcode']);
+    }
+
+    public function getHospName() {
+        return @$this->hospCode->name;
     }
 
     public function loadInitAddress($id, $type)

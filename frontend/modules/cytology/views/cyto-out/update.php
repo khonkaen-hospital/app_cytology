@@ -5,17 +5,15 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\modules\cytology\models\CytoOut */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Cyto Out',
-]) . $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Cyto Outs'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->ref]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->title = 'ลงผลการตรวจ CN : ' . $model->cn;
+$this->params['breadcrumbs'][] = ['label' => 'ทะเบียนผู้ป่วย นอก รพ.', 'url' => ['index']];
+// $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->ref]];
+$this->params['breadcrumbs'][] = 'ลงผลการตรวจ CN : ' . $model->cn;
 ?>
 <div class="cyto-out-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
+  <h1><center><?= Html::encode($this->title) ?></center></h1>
+  <br/>
     <?= $this->render('_form', [
         'model' => $model,
         'changwat' => $changwat,
