@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
 use yii\caching\TagDependency;
 use yii\db\Exception;
 use yii\helpers\Json;
-
+use yii\Date;
 /**
  * CytoOutController implements the CRUD actions for CytoOut model.
  */
@@ -71,14 +71,14 @@ class CytoOutController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($cyto_type)
     {
         $model = new CytoOut();
         $current_year = (integer)date("Y")+543;
         $current_cm = date("d-m");
         $current_date = $current_cm.'-'.$current_year;
 
-        $model = new CytoOut(['cn_date'=>$current_date]);
+        $model = new CytoOut(['cyto_type'=>$cyto_type,'cn_date'=>$current_date]);
         $mymax = CytoOut::find()
             ->orderBy('ref DESC')
             ->one();
@@ -92,7 +92,10 @@ class CytoOutController extends Controller
           $running_no = sprintf('%04d',(isset($mymax))?(($mymax->ref)+1):1);
           $cn_no = $thaiyear.$month.'02'.$running_no;
 
-          $model->age = $this->getAge($_POST['CytoOut']['birthdate'],$_POST['CytoOut']['cn_date']);
+          if(($_POST['CytoOut']['age'] == '')){
+            $model->age = $this->getAge($_POST['CytoOut']['birthdate'],$_POST['CytoOut']['cn_date']);
+          }
+
           $model->cn = $cn_no;
           $model->save();
           return $this->redirect(['index']);
@@ -235,5 +238,6 @@ class CytoOutController extends Controller
     }
     return $out;
 }
+
 
 }

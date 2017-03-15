@@ -109,6 +109,14 @@ class CytoInController extends Controller
         $hn = $model->hn;
         $out = ArrayHelper::map($this->getVn($hn),'id','name');
 
+        $current_year = (integer)date("Y")+543;
+        $current_cm = date("d-m");
+        $current_date = $current_cm.'-'.$current_year;
+
+        if(!isset($model->result_date)){
+            $model->result_date = $current_date;
+        }
+
 
         if ($model->load(Yii::$app->request->post())) {
           $model->attributes = Yii::$app->request->post('CytoIn');
@@ -119,6 +127,7 @@ class CytoInController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'out'=>$out,
+                'current_date' => $current_date
             ]);
         }
     }

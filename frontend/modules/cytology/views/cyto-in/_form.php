@@ -433,9 +433,13 @@ if(!$model->isNewRecord){
 <div class="row">
 
   <div class="form-group">
-  <div class="col-md-6"><?= $form->field($model, 'adequacy')->dropDownList($lib_adequacy_specimen ,['prompt'=>'เลือก Adequacy of Specimen']) ?></div>
-  <div class="col-md-2"><label for="search_cause">รหัส สาเหตุ</label><input type="number" id="search_cause" class="form-control" placeholder="รหัส สาเหตุ"/></div>
-  <div class="col-md-4"><?= $form->field($model, 'cause')->dropDownList($lib_adequacy ,['prompt'=>'เลือก สาเหตุ']) ?></div>
+  <div class ="col-md-6">
+  <div class="col-md-12"><?= $form->field($model, 'adequacy')->dropDownList($lib_adequacy_specimen ,['prompt'=>'เลือก Adequacy of Specimen']) ?></div>
+  </div>
+  <div class ="col-md-6">
+  <div class="col-md-4"><label for="search_cause">รหัส สาเหตุ</label><input type="number" id="search_cause" class="form-control" placeholder="รหัส สาเหตุ"/></div>
+  <div class="col-md-8"><?= $form->field($model, 'cause')->dropDownList($lib_adequacy ,['prompt'=>'เลือก สาเหตุ']) ?></div>
+</div>
 </div>
 
 </div>
@@ -521,9 +525,18 @@ if(!$model->isNewRecord){
   </div>
   <div class="col-md-6">
     <?php
+    //echo $current_date;
+    // $date_value = '';
+    // if($model->result_date = '01-01-1970'){
+    //   $date_value = $current_date;
+    // }else{
+    //   $data_value = $model->result_date;
+    // }
       echo $form->field($model, 'result_date')->widget(MaskedInput::className(), [
           'mask' => '99-99-9999',
-          'options' => ['class'=>'form-control']
+          'options' => ['class'=>'form-control'
+                        //,'value'=>$date_value
+                        ]
         ])->label('วันที่ลงผลตรวจ (Ex. 28-02-2560)')
     ?>
     <?php

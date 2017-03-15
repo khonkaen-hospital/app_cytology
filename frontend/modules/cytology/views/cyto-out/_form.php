@@ -20,6 +20,7 @@ use yii\widgets\MaskedInput;
 use kartik\select2\Select2;
 use kartik\checkbox\CheckboxX;
 use yii\web\JsExpression;
+use yii\Date;
 
 //echo $fullage;
 /* @var $this yii\web\View */
@@ -36,6 +37,15 @@ $lib_cytist = ArrayHelper::map(LibCytist::find()->all(), 'code', 'name');
 $lib_pttype = ArrayHelper::map(LibPttype::find()->all(), 'code', 'text');
 $lib_titles = $model->getTitles();
 // $lib_hospcode = ArrayHelper::map(LibHospcode::find()->all(), 'code5', 'name');
+
+// $date = new DateTime('first Monday of this month');
+// $thisMonth = $date->format('m');
+//
+// while ($date->format('m') === $thisMonth) {
+//     echo $date->format('Y-m-d'), "\n";
+//     $date->modify('next Monday');
+// }
+
 
 ?>
 
@@ -267,7 +277,7 @@ if(!$model->isNewRecord){
   </div>
   <div class="form-group">
     <div class="col-md-2">
-      <?= $form->field($model, 'title')->dropDownList(['นาง'=>'นาง','นางสาว'=>'นางสาว','ด.ญ.'=>'ด.ญ.']) ?>
+      <?= $form->field($model, 'title')->dropDownList(['นาง'=>'นาง','นางสาว'=>'นางสาว','ด.ญ.'=>'ด.ญ.','นาย'=>'นาย','ด.ช.'=>'ด.ช.']) ?>
     </div>
     <div class="col-md-3">
       <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
@@ -290,6 +300,9 @@ if(!$model->isNewRecord){
           ])->label('วันเกิด (Ex. 28-02-2560)')
       ?>
     </div>
+    <div class="col-md-2">
+        <?= $form->field($model, 'age')->textInput(['type' => 'number'])->label('อายุ(ปี)') ?>
+    </div>
     <div class="col-md-3">
     <?=
       $form->field($model, 'pttype')->widget(Select2::classname(), [
@@ -302,7 +315,7 @@ if(!$model->isNewRecord){
       ]);
     ?>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
 
       <?php
         $url = Url::to(['cyto-out/hosp-list']);
@@ -398,18 +411,12 @@ if(!$model->isNewRecord){
   <div class="form-group ">
     <div class="col-md-2"><label for="search_specimen">รหัส Specimen</label><input type="text" id="search_specimen" class="form-control" placeholder="รหัส Specimen"/></div>
     <div class="col-md-4"><?= $form->field($model, 'specimen')->dropDownList($lib_specimen ,['prompt'=>'เลือก Specimen']) ?></div>
-    <div class="col-md-6"><?= $form->field($model, 'adequacy')->dropDownList($lib_adequacy_specimen ,['prompt'=>'เลือก Adequacy of Specimen']) ?></div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="form-group ">
-    <div class="col-md-2"><label for="search_cause">รหัส สาเหตุ</label><input type="number" id="search_cause" class="form-control" placeholder="รหัส สาเหตุ"/></div>
-    <div class="col-md-4"><?= $form->field($model, 'cause')->dropDownList($lib_adequacy ,['prompt'=>'เลือก สาเหตุ']) ?></div>
-  <div class="col-md-6">
+    <div class="col-md-6">
     <?= $form->field($model, 'price')->textInput() ?>
   </div>
+    </div>
 </div>
+
 </div>
 </div>
 </div>
@@ -422,6 +429,19 @@ if(!$model->isNewRecord){
     <h3 class="panel-title">ผลการตรวจ [ CN: <?= $model->cn ?> ] </h3>
   </div>
 <div class="panel-body">
+
+<div class="row">
+
+  <div class="form-group">
+  <div class ="col-md-6">
+  <div class="col-md-12"><?= $form->field($model, 'adequacy')->dropDownList($lib_adequacy_specimen ,['prompt'=>'เลือก Adequacy of Specimen']) ?></div>
+  </div>
+  <div class ="col-md-6">
+  <div class="col-md-4"><label for="search_cause">รหัส สาเหตุ</label><input type="number" id="search_cause" class="form-control" placeholder="รหัส สาเหตุ"/></div>
+  <div class="col-md-8"><?= $form->field($model, 'cause')->dropDownList($lib_adequacy ,['prompt'=>'เลือก สาเหตุ']) ?></div>
+</div>
+</div>
+</div>
 
 <div class="row">
   <!-- <div class="form-group"> -->

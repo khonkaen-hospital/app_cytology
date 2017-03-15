@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = 'ลงผลการตรวจ CN : ' . $mo
     <?= $this->render('_form', [
         'model' => $model,
         'out' => $out,
+        'current_date' => $current_date,
     ]) ?>
 
 </div>

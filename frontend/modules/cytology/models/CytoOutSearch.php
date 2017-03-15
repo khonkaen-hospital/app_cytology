@@ -47,6 +47,7 @@ class CytoOutSearch extends CytoOut
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' =>['defaultOrder'=>['ref'=>SORT_DESC]]
         ]);
 
         $this->load($params);

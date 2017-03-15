@@ -89,7 +89,8 @@ use yii\widgets\ActiveForm;
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'ค้นหา'), ['class' => 'btn btn-primary']) ?>
         <?php // Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
-        <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> ลงทะเบียนผู้ป่วยใหม่ นอก รพ.', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Pap Smear', ['create','cyto_type' => '1'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Non-Gyne', ['create','cyto_type' => '2'], ['class' => 'btn btn-success']) ?>
 
     </div>
   </div>
