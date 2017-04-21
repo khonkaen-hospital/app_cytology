@@ -36,8 +36,13 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'ใน รพ.', 'url' => ['/cytology/cyto-in/index']],
-        ['label' => 'นอก รพ.', 'url' => ['/cytology/cyto-out/index']],
+        ['label' => 'Cytology', 'items' => [
+          ['label' => 'ใน รพ.', 'url' => ['/cytology/cyto-in/index']],
+          ['label' => 'นอก รพ.', 'url' => ['/cytology/cyto-out/index']],
+          ]
+        ],
+        ['label' => 'Pathology', 'url' => ['/pathology/patho/index']],
+
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
